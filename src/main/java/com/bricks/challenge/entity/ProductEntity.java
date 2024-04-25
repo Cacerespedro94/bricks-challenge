@@ -27,6 +27,8 @@ public class ProductEntity {
     String name;
     @Column
     BigDecimal price;
+    @Column
+    private Integer stock;
     @Column(name = "category_id")
     Integer categoryId;
 }

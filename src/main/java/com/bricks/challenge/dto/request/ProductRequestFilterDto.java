@@ -11,10 +11,9 @@ import java.math.BigDecimal;
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductRequestDto {
-    private Integer id;
+public class ProductRequestFilterDto {
     private String name;
     private BigDecimal price;
     private Integer stock;
-    private String categoryId;
+    private Integer categoryId;
 }
