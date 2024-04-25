@@ -5,6 +5,7 @@ import com.bricks.challenge.dto.request.ProductRequestFilterDto;
 import com.bricks.challenge.dto.request.ProductUpdateDto;
 import com.bricks.challenge.dto.response.ProductResponseDto;
 import com.bricks.challenge.entity.ProductEntity;
+import com.bricks.challenge.exceptions.ProductNotFoundException;
 import com.bricks.challenge.mapper.ProductMapper;
 import com.bricks.challenge.repository.ProductRepository;
 import com.bricks.challenge.repository.ProductSpecification;
@@ -37,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponseDto getProductById(Integer productId) {
-        ProductEntity productEntity = productRepository.findById(productId).get();
+        ProductEntity productEntity = getProductEntityById(productId);
         ProductResponseDto productDto = productMapper.toDto(productEntity);
         productDto.setCategory(categoryService.getCategoryById(productEntity.getCategoryId()));
         return productDto;
@@ -50,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponseDto updateProduct(ProductUpdateDto dto) {
-        ProductEntity productEntity = productRepository.findById(dto.getId()).get();
+        ProductEntity productEntity = getProductEntityById(dto.getId());
         productMapper.updateProductEntity(dto, productEntity);
         productRepository.saveAndFlush(productEntity);
 
@@ -59,7 +60,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProduct(Integer productId) {
-        ProductEntity productEntity = productRepository.findById(productId).get();
+        ProductEntity productEntity = getProductEntityById(productId);
         productRepository.delete(productEntity);
+    }
+
+    private ProductEntity getProductEntityById(Integer productId){
+        return productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException(productId));
     }
 }

@@ -1,6 +1,7 @@
 package com.bricks.challenge.service.serviceImpl;
 
 import com.bricks.challenge.dto.response.CategoryDto;
+import com.bricks.challenge.exceptions.CategoryNotFoundException;
 import com.bricks.challenge.service.CategoryService;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cache.annotation.Cacheable;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -34,13 +36,17 @@ public class CategoryServiceImpl implements CategoryService {
         return response.getBody();
     }
 
-    @Override
     @Cacheable(value = "categories", key = "#categoryId")
     public CategoryDto getCategoryById(Integer categoryId) {
         List<CategoryDto> categories = getCategories();
-        return categories.stream()
+        Optional<CategoryDto> categoryOptional = categories.stream()
                 .filter(category -> category.getId().equals(categoryId))
-                .findFirst()
-                .orElse(null);
+                .findFirst();
+
+        if (categoryOptional.isPresent()) {
+            return categoryOptional.get();
+        } else {
+            throw new CategoryNotFoundException(categoryId);
+        }
     }
 }
