@@ -54,8 +54,9 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity productEntity = getProductEntityById(dto.getId());
         productMapper.updateProductEntity(dto, productEntity);
         productRepository.saveAndFlush(productEntity);
-
-        return productMapper.toDto(productEntity);
+        ProductResponseDto productDto = productMapper.toDto(productEntity);
+        productDto.setCategory(categoryService.getCategoryById(productEntity.getCategoryId()));
+        return productDto;
     }
 
     @Override
