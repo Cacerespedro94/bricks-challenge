@@ -2,6 +2,7 @@ package com.bricks.challenge.service;
 
 import com.bricks.challenge.dto.request.ProductRequestDto;
 import com.bricks.challenge.dto.request.ProductRequestFilterDto;
+import com.bricks.challenge.dto.request.ProductUpdateDto;
 import com.bricks.challenge.dto.response.ProductResponseDto;
 import com.bricks.challenge.entity.ProductEntity;
 import org.springframework.data.domain.Page;
@@ -13,4 +14,8 @@ public interface ProductService {
     ProductResponseDto getProductById(Integer productId);
 
     Page<ProductEntity> getProductsPaginated(ProductRequestFilterDto filterDto, Pageable pageable);
+
+    ProductResponseDto updateProduct(ProductUpdateDto dto);
+
+    void deleteProduct(Integer productId);
 }
